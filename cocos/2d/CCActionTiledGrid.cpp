@@ -1,7 +1,8 @@
 /****************************************************************************
 Copyright (c) 2009      On-Core
 Copyright (c) 2010-2012 cocos2d-x.org
-CopyRight (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2013-2016 Chukong Technologies Inc.
+Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
 http://www.cocos2d-x.org
 
@@ -73,9 +74,8 @@ ShakyTiles3D* ShakyTiles3D::clone() const
     return ShakyTiles3D::create(_duration, _gridSize, _randrange, _shakeZ);
 }
 
-void ShakyTiles3D::update(float time)
+void ShakyTiles3D::update(float /*time*/)
 {
-    CC_UNUSED_PARAM(time);
     int i, j;
 
     for (i = 0; i < _gridSize.width; ++i)
@@ -145,9 +145,8 @@ ShatteredTiles3D* ShatteredTiles3D::clone() const
     return ShatteredTiles3D::create(_duration, _gridSize, _randrange, _shatterZ);
 }
 
-void ShatteredTiles3D::update(float time)
+void ShatteredTiles3D::update(float /*time*/)
 {
-    CC_UNUSED_PARAM(time);
     int i, j;
 
     if (_once == false)
@@ -567,7 +566,7 @@ TurnOffTiles* TurnOffTiles::clone() const
     return TurnOffTiles::create(_duration, _gridSize, _seed);
 }
 
-TurnOffTiles::~TurnOffTiles(void)
+TurnOffTiles::~TurnOffTiles()
 {
     CC_SAFE_DELETE_ARRAY(_tilesOrder);
 }

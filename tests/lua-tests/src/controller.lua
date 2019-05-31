@@ -11,7 +11,7 @@ require "cocos.init"
 local director = cc.Director:getInstance()
 local glView   = director:getOpenGLView()
 if nil == glView then
-    glView = cc.GLViewImpl:createWithRect("Lua Tests", cc.rect(0,0,900,640))
+    glView = cc.GLViewImpl:createWithRect("Lua Tests", cc.rect(0,0,960,640))
     director:setOpenGLView(glView)
 end
 
@@ -30,7 +30,7 @@ if screenSize.height > 320 then
     cc.Director:getInstance():setContentScaleFactor(resourceSize.height/designSize.height)
 end
 
-glView:setDesignResolutionSize(designSize.width, designSize.height, cc.ResolutionPolicy.FIXED_HEIGHT)
+glView:setDesignResolutionSize(designSize.width, designSize.height, cc.ResolutionPolicy.NO_BORDER)
 
 local fileUtils = cc.FileUtils:getInstance()
 local function addSearchPath(resPrefix, height)

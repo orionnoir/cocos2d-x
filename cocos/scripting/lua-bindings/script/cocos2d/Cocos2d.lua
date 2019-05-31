@@ -1,6 +1,11 @@
 
 cc = cc or {}
 
+
+function cc.random()
+    return cc_mathutils_random()
+end
+
 function cc.clampf(value, min_inclusive, max_inclusive)
     -- body
     local temp = 0
@@ -89,33 +94,7 @@ function cc.pGetDistance(startP,endP)
 end
 
 function cc.pIsLineIntersect(A, B, C, D, s, t)
-    if ((A.x == B.x) and (A.y == B.y)) or ((C.x == D.x) and (C.y == D.y))then
-        return false, s, t
-    end
-
-    local BAx = B.x - A.x
-    local BAy = B.y - A.y
-    local DCx = D.x - C.x
-    local DCy = D.y - C.y
-    local ACx = A.x - C.x
-    local ACy = A.y - C.y
-
-    local denom = DCy * BAx - DCx * BAy
-    s = DCx * ACy - DCy * ACx
-    t = BAx * ACy - BAy * ACx
-
-    if (denom == 0) then
-        if (s == 0 or t == 0) then
-            return true, s , t
-        end
-
-        return false, s, t
-    end
-
-    s = s / denom
-    t = t / denom
-
-    return true,s,t
+    return vec2_isLineIntersect(A, B, C, D)
 end
 
 function cc.pPerp(pt)
@@ -421,8 +400,24 @@ function cc.vec4(_x, _y, _z, _w)
     return { x = _x, y = _y, z = _z, w = _w }
 end
 
+function cc.vec3add(vec3a, vec3b)
+    return {x = vec3a.x + vec3b.x, y = vec3a.y + vec3b.y, z = vec3a.z + vec3b.z}
+end
+
+function cc.vec3sub(vec3a, vec3b)
+    return {x = vec3a.x - vec3b.x, y = vec3a.y - vec3b.y, z = vec3a.z - vec3b.z}
+end
+
+function cc.vec3mul(vec3, factor)
+    return {x = vec3.x * factor, y = vec3.y * factor, z = vec3.z * factor}
+end
+
+function cc.vec3dot(vec3a, vec3b)
+    return vec3a.x * vec3b.x + vec3a.y * vec3b.y + vec3a.z * vec3b.z
+end
+
 function cc.vec3normalize(vec3)
-    local n = vec3.x * vec3.x + vec3.y * vec3.y + vec3.z * vec3.z
+    local n = cc.vec3dot(vec3, vec3)
     if n == 1.0 then
         return vec3
     end
@@ -433,8 +428,7 @@ function cc.vec3normalize(vec3)
         return vec3
     end
 
-    n = 1.0 / n
-    return {x = vec3.x * n, y = vec3.y * n, z = vec3.z * n}
+    return cc.vec3mul(vec3, 1.0/n)
 end
 
 function cc.quaternion(_x, _y ,_z,_w)

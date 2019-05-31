@@ -1,5 +1,6 @@
 /****************************************************************************
  Copyright (c) 2013 cocos2d-x.org
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
  
  http://www.cocos2d-x.org
  
@@ -37,7 +38,7 @@
 #include "unzip.h"
 #endif
 
-NS_CC_EXT_BEGIN;
+NS_CC_EXT_BEGIN
 
 using namespace std;
 using namespace cocos2d;
@@ -65,10 +66,10 @@ AssetsManager::AssetsManager(const char* packageUrl/* =nullptr */, const char* v
 {
     checkStoragePath();
     // convert downloader error code to AssetsManager::ErrorCode
-    _downloader->onTaskError = [this](const DownloadTask& task,
+    _downloader->onTaskError = [this](const DownloadTask& /*task*/,
                                       int errorCode,
-                                      int errorCodeInternal,
-                                      const std::string& errorStr)
+                                      int /*errorCodeInternal*/,
+                                      const std::string& /*errorStr*/)
     {
         _isDownloading = false;
         
@@ -82,7 +83,7 @@ AssetsManager::AssetsManager(const char* packageUrl/* =nullptr */, const char* v
     
     // progress callback
     _downloader->onTaskProgress = [this](const DownloadTask& task,
-                                         int64_t bytesReceived,
+                                         int64_t /*bytesReceived*/,
                                          int64_t totalBytesReceived,
                                          int64_t totalBytesExpected)
     {
@@ -103,7 +104,7 @@ AssetsManager::AssetsManager(const char* packageUrl/* =nullptr */, const char* v
     };
     
     // get version from version file when get data success
-    _downloader->onDataTaskSuccess = [this](const DownloadTask& task,
+    _downloader->onDataTaskSuccess = [this](const DownloadTask& /*task*/,
                                             std::vector<unsigned char>& data)
     {
         // store version info to member _version
@@ -150,7 +151,7 @@ AssetsManager::AssetsManager(const char* packageUrl/* =nullptr */, const char* v
     };
     
     // after download package, do uncompress operation
-    _downloader->onFileTaskSuccess = [this](const DownloadTask& task)
+    _downloader->onFileTaskSuccess = [this](const DownloadTask& /*task*/)
     {
         downloadAndUncompress();
     };
@@ -167,7 +168,7 @@ AssetsManager::~AssetsManager()
 
 void AssetsManager::checkStoragePath()
 {
-    if (_storagePath.size() > 0 && _storagePath[_storagePath.size() - 1] != '/')
+    if (!_storagePath.empty() && _storagePath[_storagePath.size() - 1] != '/')
     {
         _storagePath.append("/");
     }
@@ -195,7 +196,7 @@ std::string AssetsManager::keyOfDownloadedVersion() const
 
 bool AssetsManager::checkUpdate()
 {
-    if (_versionFileUrl.size() == 0 || _isDownloading) return false;
+    if (_versionFileUrl.empty() || _isDownloading) return false;
     
     // Clear _version before assign new value.
     _version.clear();
@@ -225,7 +226,7 @@ void AssetsManager::downloadAndUncompress()
             Director::getInstance()->getScheduler()->performFunctionInCocosThread([&, this] {
                 
                 // Record new version code.
-                UserDefault::getInstance()->setStringForKey(this->keyOfVersion().c_str(), this->_version.c_str());
+                UserDefault::getInstance()->setStringForKey(this->keyOfVersion().c_str(), this->_version);
                 
                 // Unrecord downloaded version code.
                 UserDefault::getInstance()->setStringForKey(this->keyOfDownloadedVersion().c_str(), "");
@@ -327,7 +328,7 @@ bool AssetsManager::uncompress()
             
             size_t startIndex=0;
             
-            size_t index=fileNameStr.find("/",startIndex);
+            size_t index=fileNameStr.find('/',startIndex);
             
             while(index != std::string::npos)
             {
@@ -355,7 +356,7 @@ bool AssetsManager::uncompress()
                 
                 startIndex=index+1;
                 
-                index=fileNameStr.find("/",startIndex);
+                index=fileNameStr.find('/',startIndex);
                 
             }
 
@@ -490,7 +491,7 @@ AssetsManager* AssetsManager::create(const char* packageUrl, const char* version
     class DelegateProtocolImpl : public AssetsManagerDelegateProtocol 
     {
     public :
-        DelegateProtocolImpl(ErrorCallback aErrorCallback, ProgressCallback aProgressCallback, SuccessCallback aSuccessCallback)
+        DelegateProtocolImpl(ErrorCallback& aErrorCallback, ProgressCallback& aProgressCallback, SuccessCallback& aSuccessCallback)
         : errorCallback(aErrorCallback), progressCallback(aProgressCallback), successCallback(aSuccessCallback)
         {}
 
@@ -512,4 +513,4 @@ AssetsManager* AssetsManager::create(const char* packageUrl, const char* version
     return manager;
 }
 
-NS_CC_EXT_END;
+NS_CC_EXT_END

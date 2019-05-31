@@ -1,6 +1,7 @@
 /****************************************************************************
  Copyright (c) 2012      cocos2d-x.org
  Copyright (c) 2013-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -36,17 +37,13 @@
 #include "base/CCDirector.h"
 #include "base/CCEventCustom.h"
 
-#if _MSC_VER > 1800
-#pragma comment(lib,"lua51-2015.lib")
-#else
 #pragma comment(lib,"lua51.lib")
-#endif
 
 NS_CC_BEGIN
 
 LuaEngine* LuaEngine::_defaultEngine = nullptr;
 
-LuaEngine* LuaEngine::getInstance(void)
+LuaEngine* LuaEngine::getInstance()
 {
     if (!_defaultEngine)
     {
@@ -56,13 +53,13 @@ LuaEngine* LuaEngine::getInstance(void)
     return _defaultEngine;
 }
 
-LuaEngine::~LuaEngine(void)
+LuaEngine::~LuaEngine()
 {
     CC_SAFE_RELEASE(_stack);
     _defaultEngine = nullptr;
 }
 
-bool LuaEngine::init(void)
+bool LuaEngine::init()
 {
     _stack = LuaStack::create();
     _stack->retain();
@@ -514,7 +511,7 @@ int LuaEngine::handleTouchesEvent(void* data)
         return 0;
     
     TouchesScriptData* touchesScriptData = static_cast<TouchesScriptData*>(data);
-    if (NULL == touchesScriptData->nativeObject || touchesScriptData->touches.size() == 0)
+    if (NULL == touchesScriptData->nativeObject || touchesScriptData->touches.empty())
         return 0;
     
     int handler = ScriptHandlerMgr::getInstance()->getObjectHandler((void*)touchesScriptData->nativeObject, ScriptHandlerMgr::HandlerType::TOUCHES);
@@ -690,7 +687,7 @@ int LuaEngine::handleEventTouches(ScriptHandlerMgr::HandlerType type,void* data)
         return 0;
     
     LuaEventTouchesData * touchesData = static_cast<LuaEventTouchesData*>(basicScriptData->value);
-    if (nullptr == touchesData->event || touchesData->touches.size() == 0)
+    if (nullptr == touchesData->event || touchesData->touches.empty())
         return 0;
     
     int handler = ScriptHandlerMgr::getInstance()->getObjectHandler((void*)basicScriptData->nativeObject, type);

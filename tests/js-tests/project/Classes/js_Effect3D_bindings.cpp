@@ -1,5 +1,6 @@
 /****************************************************************************
- Copyright (c) 2014 Chukong Technologies Inc.
+ Copyright (c) 2014-2016 Chukong Technologies Inc.
+ Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
  http://www.cocos2d-x.org
 
@@ -118,7 +119,7 @@ EffectSprite3D* EffectSprite3D::createFromObjFileAndTexture(const std::string &o
     if (sprite && sprite->initWithFile(objFilePath))
     {
         sprite->autorelease();
-        if(textureFilePath.size() > 0)
+        if(!textureFilePath.empty())
             sprite->setTexture(textureFilePath);
         return sprite;
     }
